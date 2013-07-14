@@ -8,18 +8,18 @@ My goal was to use the solver to identify the hardest puzzles. The measure of di
 At the bottom of this page I show the hardest sudoku puzzles I found. Here is how you can reproduce the experiments by yourself:
 
 Requirements
-======
+------
 
 To run the solver you just need a C compiler, such as gcc. 
 To do the full analysis you will also need gnuplot and ImageMagick convert tool, and some sort of Unix/Linux shell.
 
 Compilation
-======
+------
 
 > gcc solver.c -o solver
  
 Usage
-======
+------
 
 
 The input is assumed to come from the standard input, and the program will print to the standard output.
@@ -117,7 +117,8 @@ Download an empty sudoku board image from somewhere in the web (searched google 
 
 And now we are ready for some awesomeness! 
 
-Rendering Sudoku puzzles:
+Rendering Sudoku puzzles
+------
 
 We use ImageMagick convert tool to do the full rendering in one line:
 
