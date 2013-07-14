@@ -91,8 +91,7 @@ You can then run:
 
 > gnuplot plot.gnu
 
-
-
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/histogram.png)
 
 
 It's curious that with a logscale x-axis the distribution looks like a Gaussian. I don't have an explanation for this, however. And it's quite impressive to see that some puzzles need about 1 million backtrackings!
@@ -134,3 +133,23 @@ We use ImageMagick convert tool to do the full rendering in one line:
 Done!
 
 We can now display the top 10 hardest sudoku puzzles (according to my solver): 
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_1.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_2.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_3.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_4.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_5.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_6.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_7.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_8.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_9.png)
+
+![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_10.png)
