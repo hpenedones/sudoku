@@ -55,14 +55,14 @@ Finding hard Sudoku puzzles
 Instead of outputting the puzzle solution, we can instead output the number of backtrackings that the algorithm had to perform to achieve that solution. This gives an estimate on how hard the puzzle is.
 I didn't put a command line option for this, but you can just (un)comment the appropriate lines in the main routine:
 
-...
+```C
 print(&s, 1);    // prints the solution
 // printf("%d\n", s.nbacktracks);  // prints how many times it had to backtrack
-..
+```
 
 I downloaded a file with about 50000 puzzles (with 17 given numbers, out of the 81):
 
-> wget http://mapleta.maths.uwa.edu.au/~gordon/sudoku17 -O puzzles.txt
+> wget http://school.maths.uwa.edu.au/~gordon/sudoku17 -O puzzles.txt
 
 Then I computed the number of backtracks per puzzle for all of them (which takes a few hours!):
 
@@ -70,13 +70,13 @@ Then I computed the number of backtracks per puzzle for all of them (which takes
 
 And generated an histogram with gnuplot. I have a script called make_histograms.sh containing this:
 
-cat nbacktracks.txt | sort -n | awk -F" " '{print exp(int(log($1))) }' | uniq -c > histogram.txt
-echo "set xlabel '#backtracks to solve (log-scale)';"               > plot.gnu
-echo "set ylabel 'Frequency';"                             >> plot.gnu
-echo "set output 'histogram.png'"                     >> plot.gnu
-echo "set term png"                                        >> plot.gnu
-echo "set logscale x;"                        >> plot.gnu
-echo "plot 'histogram.txt' u 2:1 w boxes t 'Sudoku 17-puzzles' ;"  >> plot.gnu
+> cat nbacktracks.txt | sort -n | awk -F" " '{print exp(int(log($1))) }' | uniq -c > histogram.txt
+> echo "set xlabel '#backtracks to solve (log-scale)';"               > plot.gnu
+> echo "set ylabel 'Frequency';"                             >> plot.gnu
+> echo "set output 'histogram.png'"                     >> plot.gnu
+> echo "set term png"                                        >> plot.gnu
+> echo "set logscale x;"                        >> plot.gnu
+> echo "plot 'histogram.txt' u 2:1 w boxes t 'Sudoku 17-puzzles' ;"  >> plot.gnu
 
 
 You can then run: 
@@ -109,11 +109,11 @@ Ok, so now we need to render this sudoku puzzles in a human-friendly fashion. So
 
 We store the top 10 sudoku in a file (drop the backtrack counts):
 
->paste nbacktracks.txt puzzles.txt | sort -nr | head -n 10 | cut -f 2 > top10.txt
+> paste nbacktracks.txt puzzles.txt | sort -nr | head -n 10 | cut -f 2 > top10.txt
 
 Download an empty sudoku board image from somewhere in the web (searched google images with "sudoku empty"):
 
->wget http://www.scouk.net/entertainment/sudoku/blank_grid.gif
+> wget http://www.scouk.net/entertainment/sudoku/blank_grid.gif
 
 And now we are ready for some awesomeness! 
 
