@@ -71,17 +71,24 @@ Then I computed the number of backtracks per puzzle for all of them (which takes
 And generated an histogram with gnuplot. I have a script called make_histograms.sh containing this:
 
 > cat nbacktracks.txt | sort -n | awk -F" " '{print exp(int(log($1))) }' | uniq -c > histogram.txt
+
 > echo "set xlabel '#backtracks to solve (log-scale)';"               > plot.gnu
+
 > echo "set ylabel 'Frequency';"                             >> plot.gnu
+
 > echo "set output 'histogram.png'"                     >> plot.gnu
+
 > echo "set term png"                                        >> plot.gnu
+
 > echo "set logscale x;"                        >> plot.gnu
+
 > echo "plot 'histogram.txt' u 2:1 w boxes t 'Sudoku 17-puzzles' ;"  >> plot.gnu
 
 
 You can then run: 
  
 > ./make_histograms.sh
+
 > gnuplot plot.gnu
 
 
