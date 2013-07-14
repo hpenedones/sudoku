@@ -23,13 +23,11 @@ Usage
 
 
 The input is assumed to come from the standard input, and the program will print to the standard output.
-There is one command line argument, which defines the format of the input. 
+There is one command line argument, which defines the format of the input: 
 
-
-        Supported input formats:
- 
  1. Grid:
- 
+
+``` 
  53__7____
  6__195___
  _98____6_
@@ -39,10 +37,13 @@ There is one command line argument, which defines the format of the input.
  _6____28_
  ___419__5
  ____8__79
- 
+```
+
  2. Linear:
- 
+
+``` 
  530070000600195000098000060800060003400803001700020006060000280000419005000080079
+```
 
 Example:
 
