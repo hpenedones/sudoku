@@ -1,23 +1,79 @@
-Sudoku solver
-======
+# Sudoku Solver
 
-This sudoku solver finds the most constrained cell, choses a feasible number, and proceeds recursively.
+[![CI](https://github.com/hpenedones/sudoku/actions/workflows/ci.yml/badge.svg)](https://github.com/hpenedones/sudoku/actions/workflows/ci.yml)
+
+A fast and efficient sudoku solver using constraint propagation and backtracking with depth-first search.
+
+## Quick Start
+
+```bash
+make
+./solver 1 < examples/example_linear.txt
+```
+
+## Overview
+
+This sudoku solver finds the most constrained cell, chooses a feasible number, and proceeds recursively.
 At some point in the future it might have to backtrack and try another path. 
-My goal was to use the solver to identify the hardest puzzles. The measure of difficulty for a puzzle was how many times my algorithm had to backtrack on it. 
 
-At the bottom of this page I show the hardest sudoku puzzles I found. Here is how you can reproduce the experiments by yourself:
+The goal was to use the solver to identify the hardest puzzles. The measure of difficulty for a puzzle is how many times the algorithm has to backtrack on it. 
+
+## Features
+
+- **Two input formats**: Grid (9x9) and Linear (81 characters)
+- **Efficient algorithm**: Constraint propagation with backtracking
+- **Difficulty analysis**: Tracks the number of backtracks per puzzle
+- **Comprehensive examples**: Sample puzzles included in the `examples/` directory
+
+At the bottom of this page are the hardest sudoku puzzles found. Here is how you can reproduce the experiments:
 
 Requirements
 ------
 
-To run the solver you just need a C compiler, such as gcc. 
-To do the full analysis you will also need gnuplot and ImageMagick convert tool, and some sort of Unix/Linux shell.
+**Basic usage:**
+- A C compiler (e.g., gcc)
+- Make (optional, but recommended)
+
+**For full analysis:**
+- gnuplot
+- ImageMagick convert tool
+- Unix/Linux shell with standard utilities (wget, awk, sort, etc.)
 
 Compilation
 ------
 
-> gcc solver.c -o solver
- 
+Using Makefile (recommended):
+```bash
+make
+```
+
+Or manually with gcc:
+```bash
+gcc sudoku_solver.c -o solver
+```
+
+## Testing
+
+Run the test suite:
+```bash
+make test
+```
+
+This will run all tests including:
+- Grid format parsing
+- Linear format parsing  
+- Hard puzzle solving
+- Error handling
+
+## Performance
+
+Run a performance benchmark:
+```bash
+./benchmark.sh
+```
+
+The solver is very fast for typical puzzles (< 1ms) but can take several seconds for extremely difficult puzzles that require extensive backtracking.
+
 Usage
 ------
 
@@ -45,9 +101,15 @@ There is one command line argument, which defines the format of the input:
  530070000600195000098000060800060003400803001700020006060000280000419005000080079
 ```
 
-Example:
+Example with grid format:
+```bash
+./solver 2 < examples/example_grid.txt
+```
 
-> ./solver 2 < puzzle.txt
+Example with linear format:
+```bash
+./solver 1 < examples/example_linear.txt
+```
 
 
 Finding hard Sudoku puzzles
@@ -155,3 +217,19 @@ We can now display the top 10 hardest sudoku puzzles (according to my solver):
 ![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_9.png)
 
 ![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_10.png)
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Code of Conduct
+
+This project follows a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+Hugo Penedones - [hpenedones@gmail.com](mailto:hpenedones@gmail.com)

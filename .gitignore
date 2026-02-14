@@ -1,0 +1,14 @@
+# Compiled binaries
+solver
+*.o
+*.out
+*.exe
+
+# Analysis output files
+plot.gnu
+
+# Temporary files
+*.tmp
+*~
+.DS_Store
+*.exe

@@ -6,7 +6,7 @@
 	Date: 15 April 2010
 
 	Compilation:
-	$ gcc solverc. -o solver
+	$ gcc sudoku_solver.c -o solver
 	
 	Usage:
 	$ ./solver < puzzle.txt
@@ -68,7 +68,7 @@ void new_sudoku(sudoku * s)
 
 /*
 	This method can be used for both insertions and removals, depending on the parameter "type".
-	It takes care of propragating restrictions according to the operation that was done.
+	It takes care of propagating restrictions according to the operation that was done.
 	You should not call it directly, but instead use insert_number_at and remove_number_at procedures.
 */
 void change_state_at(sudoku * s, int row, int col, int number, int type)
@@ -266,12 +266,23 @@ int main (int argc, char const *argv[])
 	
 	if (argc != 2)
 		{
-			printf("Usage:\n $ %s <1=linear | 2=grid>\n < input_file.txt", argv[0]);
+			fprintf(stderr, "Usage: %s <input_format>\n", argv[0]);
+			fprintf(stderr, "  input_format:\n");
+			fprintf(stderr, "    1 = linear format (81 characters, '0' for empty)\n");
+			fprintf(stderr, "    2 = grid format (9x9 grid, '_' for empty)\n");
+			fprintf(stderr, "\nExample:\n");
+			fprintf(stderr, "  %s 1 < examples/example_linear.txt\n", argv[0]);
+			fprintf(stderr, "  %s 2 < examples/example_grid.txt\n", argv[0]);
 			exit(1);
 		}
 		
 	int intype = atoi(argv[1]);
-	assert(intype == 1 || intype == 2);
+	if (intype != 1 && intype != 2)
+		{
+			fprintf(stderr, "Error: Invalid input format '%s'\n", argv[1]);
+			fprintf(stderr, "Must be either 1 (linear) or 2 (grid)\n");
+			exit(1);
+		}
 	
 	while(!feof(stdin))
 		{
