@@ -120,7 +120,7 @@ void remove_number_at(sudoku * s, int row, int col, int number)
 }
 
 
-void get_possibilities_at(sudoku * s, int row, int col, int ** possibilites, int *poss_counter)
+void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, int *poss_counter)
 {
 	(*poss_counter) = 0;
 	int n;
@@ -128,7 +128,7 @@ void get_possibilities_at(sudoku * s, int row, int col, int ** possibilites, int
 		{
 			if (s->constraints[row][col][n] == 0)  // no active restriction
 				{
-				(*possibilites)[(*poss_counter)] = n;
+				(*possibilities)[(*poss_counter)] = n;
 				(*poss_counter)++;	
 				}
 		}
@@ -163,6 +163,13 @@ Prints the sudoku board in one of 3 visualization modes
 void print(sudoku * s, enum print_mode mode)
 {
 	int * possibilities = malloc(N *sizeof(int));
+	
+	if (possibilities == NULL)
+		{
+			fprintf(stderr, "Error: Memory allocation failed in print()\n");
+			exit(1);
+		}
+	
 	int poss_count;
 	
 	int i,j,n;
@@ -213,8 +220,8 @@ void read_input(sudoku * s, enum input_type intype)
 		for(j = 0; j < N; j++)
 		{
 			char c = getchar();
-			if (feof(stdin))
-				exit(0);
+			if (c == EOF)
+				return;
 			if (c >= '1' && c <= '9' )
 				insert_number_at(s, i, j, c - '1');
 		}
@@ -237,11 +244,18 @@ int solve(sudoku * s)
 	int row, col, poss_count, found_solution=0;
 	int * possibilities = malloc(N *sizeof(int));
 	
+	if (possibilities == NULL)
+		{
+			fprintf(stderr, "Error: Memory allocation failed in solve()\n");
+			exit(1);
+		}
+	
 	get_most_constrained_cell(s, &row, &col, &possibilities, &poss_count);
 
-	if (poss_count == 0) // should bracktrack
+	if (poss_count == 0) // should backtrack
 		{
 			s->nbacktracks++;  // just to collect statistics (not important for algorithm)
+			free(possibilities);
 			return 0; 
 		}
 		
@@ -276,8 +290,9 @@ int main (int argc, char const *argv[])
 			exit(1);
 		}
 		
-	int intype = atoi(argv[1]);
-	if (intype != 1 && intype != 2)
+	char *endptr;
+	int intype = strtol(argv[1], &endptr, 10);
+	if (*endptr != '\0' || intype < 1 || intype > 2)
 		{
 			fprintf(stderr, "Error: Invalid input format '%s'\n", argv[1]);
 			fprintf(stderr, "Must be either 1 (linear) or 2 (grid)\n");
@@ -289,6 +304,10 @@ int main (int argc, char const *argv[])
 			new_sudoku(&s);
 		
 			read_input(&s, intype);
+			
+			// Check if we read a complete puzzle
+			if (s.ninserted == 0)
+				break;
 			
 			solve(&s);
 	
