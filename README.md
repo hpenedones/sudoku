@@ -35,7 +35,7 @@ Requirements
 - Make (optional, but recommended)
 
 **For full analysis:**
-- Python 3 with matplotlib
+- Python 3 with matplotlib (install with `pip install -r analysis/requirements.txt`)
 - ImageMagick convert tool
 - Unix/Linux shell with standard utilities (wget, awk, sort, etc.)
 

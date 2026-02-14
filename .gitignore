@@ -4,9 +4,6 @@ solver
 *.out
 *.exe
 
-# Analysis output files
-plot.gnu
-
 # Temporary files
 *.tmp
 *~
