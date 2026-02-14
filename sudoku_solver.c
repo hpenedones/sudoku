@@ -160,7 +160,7 @@ void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, in
 void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibilities, int *poss_count)
 {
 	int i,j, min = N+1;
-	int temp_count;
+	int num_possibilities;
 	
 	for(i = 0; i < N; i++)
 		for(j = 0; j < N; j++)
@@ -168,14 +168,14 @@ void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibiliti
 			if(!s->inserted[i][j])
 				{
 				// Just count possibilities, don't populate array yet
-				temp_count = 0;
+				num_possibilities = 0;
 				for(int n = 0; n < N; n++)
 					if (s->constraints[i][j][n] == 0)
-						temp_count++;
+						num_possibilities++;
 				
-				if (temp_count < min)
+				if (num_possibilities < min)
 					{
-						min = temp_count;
+						min = num_possibilities;
 						*row = i;
 						*col = j;
 						// Early termination: if we find a cell with 0 possibilities, no need to search further
