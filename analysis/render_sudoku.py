@@ -81,7 +81,7 @@ def render_sudoku(puzzle_line, output_file, grid_image_path=None):
         
         if font is None:
             font = ImageFont.load_default()
-    except:
+    except Exception:
         font = ImageFont.load_default()
     
     # Draw the numbers
