@@ -13,9 +13,17 @@ make
 
 This sudoku solver finds the most constrained cell, chooses a feasible number, and proceeds recursively.
 At some point in the future it might have to backtrack and try another path. 
-My goal was to use the solver to identify the hardest puzzles. The measure of difficulty for a puzzle was how many times my algorithm had to backtrack on it. 
 
-At the bottom of this page I show the hardest sudoku puzzles I found. Here is how you can reproduce the experiments by yourself:
+The goal was to use the solver to identify the hardest puzzles. The measure of difficulty for a puzzle is how many times the algorithm has to backtrack on it. 
+
+## Features
+
+- **Two input formats**: Grid (9x9) and Linear (81 characters)
+- **Efficient algorithm**: Constraint propagation with backtracking
+- **Difficulty analysis**: Tracks the number of backtracks per puzzle
+- **Comprehensive examples**: Sample puzzles included in the `examples/` directory
+
+At the bottom of this page are the hardest sudoku puzzles found. Here is how you can reproduce the experiments:
 
 Requirements
 ------
@@ -41,7 +49,20 @@ Or manually with gcc:
 ```bash
 gcc sudoku_solver.c -o solver
 ```
- 
+
+## Testing
+
+Run the test suite:
+```bash
+make test
+```
+
+This will run all tests including:
+- Grid format parsing
+- Linear format parsing  
+- Hard puzzle solving
+- Error handling
+
 Usage
 ------
 
