@@ -178,6 +178,12 @@ void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibiliti
 						min = temp_count;
 						*row = i;
 						*col = j;
+						// Early termination: if we find a cell with 0 possibilities, no need to search further
+						if (min == 0)
+							{
+								*poss_count = 0;
+								return;
+							}
 					}
 				}
 		}
