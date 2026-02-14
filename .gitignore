@@ -9,3 +9,5 @@ solver
 *~
 .DS_Store
 *.exe
+solver_strict
+_codeql_detected_source_root

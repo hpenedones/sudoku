@@ -70,6 +70,10 @@ void new_sudoku(sudoku * s)
 	This method can be used for both insertions and removals, depending on the parameter "type".
 	It takes care of propagating restrictions according to the operation that was done.
 	You should not call it directly, but instead use insert_number_at and remove_number_at procedures.
+	
+	Parameters:
+	  type: +1 for insertion, -1 for removal
+	  number: the digit to insert/remove (0-8, representing 1-9)
 */
 void change_state_at(sudoku * s, int row, int col, int number, int type)
 {
@@ -120,7 +124,14 @@ void remove_number_at(sudoku * s, int row, int col, int number)
 }
 
 
-void get_possibilities_at(sudoku * s, int row, int col, int ** possibilites, int *poss_counter)
+/*
+	Get all possible numbers that can be placed at a given cell.
+	
+	Parameters:
+	  possibilities: pointer to array that will hold possible values
+	  poss_counter: output parameter for count of possibilities
+*/
+void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, int *poss_counter)
 {
 	(*poss_counter) = 0;
 	int n;
@@ -128,13 +139,24 @@ void get_possibilities_at(sudoku * s, int row, int col, int ** possibilites, int
 		{
 			if (s->constraints[row][col][n] == 0)  // no active restriction
 				{
-				(*possibilites)[(*poss_counter)] = n;
+				// Should never exceed N possibilities (defensive programming)
+				assert(*poss_counter < N);
+				(*possibilities)[(*poss_counter)] = n;
 				(*poss_counter)++;	
 				}
 		}
 		
 }
 
+/*
+	Find the cell with the fewest possibilities (most constrained).
+	This is a key heuristic that reduces the search space significantly.
+	
+	Parameters:
+	  row, col: output parameters for the most constrained cell position
+	  possibilities: output parameter for possible values at that cell
+	  poss_count: output parameter for count of possibilities
+*/
 void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibilities, int *poss_count)
 {
 	int i,j, min = N+1;
@@ -158,11 +180,21 @@ void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibiliti
 
 
 /*
-Prints the sudoku board in one of 3 visualization modes
+	Prints the sudoku board in one of 3 visualization modes:
+	  HYPOTHESIS_COUNT: shows number of possibilities per cell
+	  VALUE: shows solved values (or * for unsolved)
+	  ALL_HYPOTHESIS: shows all possible values for each cell
 */
 void print(sudoku * s, enum print_mode mode)
 {
 	int * possibilities = malloc(N *sizeof(int));
+	
+	if (possibilities == NULL)
+		{
+			fprintf(stderr, "Error: Memory allocation failed in print()\n");
+			exit(1);
+		}
+	
 	int poss_count;
 	
 	int i,j,n;
@@ -205,16 +237,28 @@ void print(sudoku * s, enum print_mode mode)
 
 
 
-void read_input(sudoku * s, enum input_type intype)
+/*
+	Read sudoku puzzle from stdin.
+	
+	Parameters:
+	  intype: LINEAR_INPUT (81 chars) or GRID_INPUT (9x9 with newlines)
+	  
+	Format: digits 1-9 for givens, 0 or '_' for empty cells
+	
+	Returns: 1 if a complete puzzle was read, 0 if EOF encountered
+*/
+int read_input(sudoku * s, enum input_type intype)
 {
 	int i,j;
+	int chars_read = 0;
 	for(i = 0; i < N; i++)
 	{
 		for(j = 0; j < N; j++)
 		{
 			char c = getchar();
-			if (feof(stdin))
-				exit(0);
+			if (c == EOF)
+				return 0;  // EOF encountered
+			chars_read++;
 			if (c >= '1' && c <= '9' )
 				insert_number_at(s, i, j, c - '1');
 		}
@@ -223,11 +267,15 @@ void read_input(sudoku * s, enum input_type intype)
 	}
 	if (intype == LINEAR_INPUT)
 		getchar(); // discards the \n only at the end
+	return 1;  // Successfully read complete puzzle
 }
 
 /*
- Depth first search with backtracking.
- At each level we follow the most constrained sudoku cell (tree node with less childs). 
+	Depth first search with backtracking.
+	At each level we follow the most constrained sudoku cell (tree node with fewest children).
+	This heuristic dramatically reduces the search space.
+	
+	Returns: 1 if solution found, 0 if no solution exists
 */
 int solve(sudoku * s)
 {
@@ -237,11 +285,18 @@ int solve(sudoku * s)
 	int row, col, poss_count, found_solution=0;
 	int * possibilities = malloc(N *sizeof(int));
 	
+	if (possibilities == NULL)
+		{
+			fprintf(stderr, "Error: Memory allocation failed in solve()\n");
+			exit(1);
+		}
+	
 	get_most_constrained_cell(s, &row, &col, &possibilities, &poss_count);
 
-	if (poss_count == 0) // should bracktrack
+	if (poss_count == 0) // should backtrack
 		{
 			s->nbacktracks++;  // just to collect statistics (not important for algorithm)
+			free(possibilities);
 			return 0; 
 		}
 		
@@ -276,8 +331,9 @@ int main (int argc, char const *argv[])
 			exit(1);
 		}
 		
-	int intype = atoi(argv[1]);
-	if (intype != 1 && intype != 2)
+	char *endptr;
+	int intype = strtol(argv[1], &endptr, 10);
+	if (*endptr != '\0' || intype < 1 || intype > 2)
 		{
 			fprintf(stderr, "Error: Invalid input format '%s'\n", argv[1]);
 			fprintf(stderr, "Must be either 1 (linear) or 2 (grid)\n");
@@ -288,7 +344,8 @@ int main (int argc, char const *argv[])
 		{
 			new_sudoku(&s);
 		
-			read_input(&s, intype);
+			if (!read_input(&s, intype))
+				break;  // EOF or incomplete input
 			
 			solve(&s);
 	
