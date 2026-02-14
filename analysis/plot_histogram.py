@@ -9,6 +9,10 @@ matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import sys
 
+# Constants for bar width calculations
+ZERO_BAR_WIDTH = 0.5  # Fixed width for bars at x=0 (not visible on log scale)
+BAR_SPACING_FACTOR = 0.8  # Use 80% of spacing between adjacent bars
+
 def read_histogram_data(filename='histogram.txt'):
     """Read histogram data from file."""
     x_values = []
@@ -35,13 +39,13 @@ def plot_histogram(x_values, y_values, output_file='histogram.png'):
     for i in range(len(x_values)):
         if x_values[i] == 0:
             # For zero, use a small fixed width
-            widths.append(0.5)
+            widths.append(ZERO_BAR_WIDTH)
         elif i < len(x_values) - 1:
-            # Use 80% of spacing to next point
-            widths.append((x_values[i+1] - x_values[i]) * 0.8)
+            # Use spacing factor times the distance to next point
+            widths.append((x_values[i+1] - x_values[i]) * BAR_SPACING_FACTOR)
         else:
-            # For last bar, use the value itself as width
-            widths.append(x_values[i] * 0.8)
+            # For last bar, use spacing factor times the value itself
+            widths.append(x_values[i] * BAR_SPACING_FACTOR)
     
     # Create bar plot
     plt.bar(x_values, y_values, width=widths, align='edge', 
