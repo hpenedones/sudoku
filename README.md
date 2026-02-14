@@ -1,7 +1,17 @@
-Sudoku solver
-======
+# Sudoku Solver
 
-This sudoku solver finds the most constrained cell, choses a feasible number, and proceeds recursively.
+A fast and efficient sudoku solver using constraint propagation and backtracking with depth-first search.
+
+## Quick Start
+
+```bash
+make
+./solver 1 < examples/example_linear.txt
+```
+
+## Overview
+
+This sudoku solver finds the most constrained cell, chooses a feasible number, and proceeds recursively.
 At some point in the future it might have to backtrack and try another path. 
 My goal was to use the solver to identify the hardest puzzles. The measure of difficulty for a puzzle was how many times my algorithm had to backtrack on it. 
 
@@ -10,13 +20,27 @@ At the bottom of this page I show the hardest sudoku puzzles I found. Here is ho
 Requirements
 ------
 
-To run the solver you just need a C compiler, such as gcc. 
-To do the full analysis you will also need gnuplot and ImageMagick convert tool, and some sort of Unix/Linux shell.
+**Basic usage:**
+- A C compiler (e.g., gcc)
+- Make (optional, but recommended)
+
+**For full analysis:**
+- gnuplot
+- ImageMagick convert tool
+- Unix/Linux shell with standard utilities (wget, awk, sort, etc.)
 
 Compilation
 ------
 
-> gcc solver.c -o solver
+Using Makefile (recommended):
+```bash
+make
+```
+
+Or manually with gcc:
+```bash
+gcc sudoku_solver.c -o solver
+```
  
 Usage
 ------
@@ -45,9 +69,15 @@ There is one command line argument, which defines the format of the input:
  530070000600195000098000060800060003400803001700020006060000280000419005000080079
 ```
 
-Example:
+Example with grid format:
+```bash
+./solver 2 < examples/example_grid.txt
+```
 
-> ./solver 2 < puzzle.txt
+Example with linear format:
+```bash
+./solver 1 < examples/example_linear.txt
+```
 
 
 Finding hard Sudoku puzzles
