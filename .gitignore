@@ -11,3 +11,4 @@ plot.gnu
 *.tmp
 *~
 .DS_Store
+*.exe
