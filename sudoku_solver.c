@@ -70,6 +70,10 @@ void new_sudoku(sudoku * s)
 	This method can be used for both insertions and removals, depending on the parameter "type".
 	It takes care of propagating restrictions according to the operation that was done.
 	You should not call it directly, but instead use insert_number_at and remove_number_at procedures.
+	
+	Parameters:
+	  type: +1 for insertion, -1 for removal
+	  number: the digit to insert/remove (0-8, representing 1-9)
 */
 void change_state_at(sudoku * s, int row, int col, int number, int type)
 {
@@ -110,7 +114,7 @@ void change_state_at(sudoku * s, int row, int col, int number, int type)
 void insert_number_at(sudoku * s, int row, int col, int number)
 {
 //	printf("Inserting %d at (%d, %d)\n", number+1, row+1, col+1);
-	change_state_at(s, row, col, number, +1);
+	change_state_at(s, row, col, number, 1);
 }
 
 void remove_number_at(sudoku * s, int row, int col, int number)
@@ -120,6 +124,13 @@ void remove_number_at(sudoku * s, int row, int col, int number)
 }
 
 
+/*
+	Get all possible numbers that can be placed at a given cell.
+	
+	Parameters:
+	  possibilities: pointer to array that will hold possible values
+	  poss_counter: output parameter for count of possibilities
+*/
 void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, int *poss_counter)
 {
 	(*poss_counter) = 0;
@@ -128,13 +139,25 @@ void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, in
 		{
 			if (s->constraints[row][col][n] == 0)  // no active restriction
 				{
-				(*possibilities)[(*poss_counter)] = n;
-				(*poss_counter)++;	
+				if (*poss_counter < N)  // bounds check
+					{
+						(*possibilities)[(*poss_counter)] = n;
+						(*poss_counter)++;	
+					}
 				}
 		}
 		
 }
 
+/*
+	Find the cell with the fewest possibilities (most constrained).
+	This is a key heuristic that reduces the search space significantly.
+	
+	Parameters:
+	  row, col: output parameters for the most constrained cell position
+	  possibilities: output parameter for possible values at that cell
+	  poss_count: output parameter for count of possibilities
+*/
 void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibilities, int *poss_count)
 {
 	int i,j, min = N+1;
@@ -158,7 +181,10 @@ void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibiliti
 
 
 /*
-Prints the sudoku board in one of 3 visualization modes
+	Prints the sudoku board in one of 3 visualization modes:
+	  HYPOTHESIS_COUNT: shows number of possibilities per cell
+	  VALUE: shows solved values (or * for unsolved)
+	  ALL_HYPOTHESIS: shows all possible values for each cell
 */
 void print(sudoku * s, enum print_mode mode)
 {
@@ -212,6 +238,14 @@ void print(sudoku * s, enum print_mode mode)
 
 
 
+/*
+	Read sudoku puzzle from stdin.
+	
+	Parameters:
+	  intype: LINEAR_INPUT (81 chars) or GRID_INPUT (9x9 with newlines)
+	  
+	Format: digits 1-9 for givens, 0 or '_' for empty cells
+*/
 void read_input(sudoku * s, enum input_type intype)
 {
 	int i,j;
@@ -233,8 +267,11 @@ void read_input(sudoku * s, enum input_type intype)
 }
 
 /*
- Depth first search with backtracking.
- At each level we follow the most constrained sudoku cell (tree node with less childs). 
+	Depth first search with backtracking.
+	At each level we follow the most constrained sudoku cell (tree node with fewest children).
+	This heuristic dramatically reduces the search space.
+	
+	Returns: 1 if solution found, 0 if no solution exists
 */
 int solve(sudoku * s)
 {
