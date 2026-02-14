@@ -29,8 +29,22 @@ def plot_histogram(x_values, y_values, output_file='histogram.png'):
     """Create and save histogram plot."""
     plt.figure(figsize=(10, 6))
     
+    # Calculate widths for logarithmic scale
+    # For each bar, use 80% of the spacing to the next value (or use the value itself for the last bar)
+    widths = []
+    for i in range(len(x_values)):
+        if x_values[i] == 0:
+            # For zero, use a small fixed width
+            widths.append(0.5)
+        elif i < len(x_values) - 1:
+            # Use 80% of spacing to next point
+            widths.append((x_values[i+1] - x_values[i]) * 0.8)
+        else:
+            # For last bar, use the value itself as width
+            widths.append(x_values[i] * 0.8)
+    
     # Create bar plot
-    plt.bar(x_values, y_values, width=[x * 0.8 for x in x_values], align='edge', 
+    plt.bar(x_values, y_values, width=widths, align='edge', 
             edgecolor='black', linewidth=0.5, label='Sudoku 17-puzzles')
     
     # Set logarithmic scale for x-axis
