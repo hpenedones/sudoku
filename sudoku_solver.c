@@ -160,21 +160,28 @@ void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, in
 void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibilities, int *poss_count)
 {
 	int i,j, min = N+1;
+	int temp_count;
 	
 	for(i = 0; i < N; i++)
 		for(j = 0; j < N; j++)
 		{
 			if(!s->inserted[i][j])
 				{
-				get_possibilities_at(s, i, j, possibilities, poss_count);
-				if (*poss_count < min)
+				// Just count possibilities, don't populate array yet
+				temp_count = 0;
+				for(int n = 0; n < N; n++)
+					if (s->constraints[i][j][n] == 0)
+						temp_count++;
+				
+				if (temp_count < min)
 					{
-						min = *poss_count;
+						min = temp_count;
 						*row = i;
 						*col = j;
 					}
 				}
 		}
+	// Now get the actual possibilities for the best cell
 	get_possibilities_at(s, *row, *col, possibilities, poss_count);
 }
 
@@ -187,14 +194,8 @@ void get_most_constrained_cell(sudoku *s, int *row, int *col, int ** possibiliti
 */
 void print(sudoku * s, enum print_mode mode)
 {
-	int * possibilities = malloc(N *sizeof(int));
-	
-	if (possibilities == NULL)
-		{
-			fprintf(stderr, "Error: Memory allocation failed in print()\n");
-			exit(1);
-		}
-	
+	int possibilities[N];  // Use stack allocation instead of malloc
+	int * possibilities_ptr = possibilities;
 	int poss_count;
 	
 	int i,j,n;
@@ -202,7 +203,7 @@ void print(sudoku * s, enum print_mode mode)
 	{
 		for(j = 0; j < N; j++)
 		{
-			get_possibilities_at(s, i, j, &possibilities, &poss_count);
+			get_possibilities_at(s, i, j, &possibilities_ptr, &poss_count);
 			
 			switch(mode)
 			{
@@ -231,8 +232,6 @@ void print(sudoku * s, enum print_mode mode)
 		putchar('\n');
 	}
 	putchar('\n');
-	
-	free(possibilities);
 }
 
 
@@ -283,20 +282,14 @@ int solve(sudoku * s)
 		return 1;
 	
 	int row, col, poss_count, found_solution=0;
-	int * possibilities = malloc(N *sizeof(int));
+	int possibilities[N];  // Use stack allocation instead of malloc
+	int * possibilities_ptr = possibilities;
 	
-	if (possibilities == NULL)
-		{
-			fprintf(stderr, "Error: Memory allocation failed in solve()\n");
-			exit(1);
-		}
-	
-	get_most_constrained_cell(s, &row, &col, &possibilities, &poss_count);
+	get_most_constrained_cell(s, &row, &col, &possibilities_ptr, &poss_count);
 
 	if (poss_count == 0) // should backtrack
 		{
 			s->nbacktracks++;  // just to collect statistics (not important for algorithm)
-			free(possibilities);
 			return 0; 
 		}
 		
@@ -310,7 +303,6 @@ int solve(sudoku * s)
 			remove_number_at(s, row, col, possibilities[i]);
 			
 		}
-	free(possibilities);
 	return found_solution;
 	
 }
