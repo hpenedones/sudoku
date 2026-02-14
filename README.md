@@ -1,5 +1,7 @@
 # Sudoku Solver
 
+[![CI](https://github.com/hpenedones/sudoku/actions/workflows/ci.yml/badge.svg)](https://github.com/hpenedones/sudoku/actions/workflows/ci.yml)
+
 A fast and efficient sudoku solver using constraint propagation and backtracking with depth-first search.
 
 ## Quick Start
@@ -62,6 +64,15 @@ This will run all tests including:
 - Linear format parsing  
 - Hard puzzle solving
 - Error handling
+
+## Performance
+
+Run a performance benchmark:
+```bash
+./benchmark.sh
+```
+
+The solver is very fast for typical puzzles (< 1ms) but can take several seconds for extremely difficult puzzles that require extensive backtracking.
 
 Usage
 ------
@@ -206,3 +217,19 @@ We can now display the top 10 hardest sudoku puzzles (according to my solver):
 ![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_9.png)
 
 ![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_10.png)
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Code of Conduct
+
+This project follows a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+Hugo Penedones - [hpenedones@gmail.com](mailto:hpenedones@gmail.com)
