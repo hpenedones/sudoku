@@ -114,7 +114,7 @@ void change_state_at(sudoku * s, int row, int col, int number, int type)
 void insert_number_at(sudoku * s, int row, int col, int number)
 {
 //	printf("Inserting %d at (%d, %d)\n", number+1, row+1, col+1);
-	change_state_at(s, row, col, number, 1);
+	change_state_at(s, row, col, number, +1);
 }
 
 void remove_number_at(sudoku * s, int row, int col, int number)
@@ -139,11 +139,10 @@ void get_possibilities_at(sudoku * s, int row, int col, int ** possibilities, in
 		{
 			if (s->constraints[row][col][n] == 0)  // no active restriction
 				{
-				if (*poss_counter < N)  // bounds check
-					{
-						(*possibilities)[(*poss_counter)] = n;
-						(*poss_counter)++;	
-					}
+				// Should never exceed N possibilities (defensive programming)
+				assert(*poss_counter < N);
+				(*possibilities)[(*poss_counter)] = n;
+				(*poss_counter)++;	
 				}
 		}
 		
@@ -245,17 +244,21 @@ void print(sudoku * s, enum print_mode mode)
 	  intype: LINEAR_INPUT (81 chars) or GRID_INPUT (9x9 with newlines)
 	  
 	Format: digits 1-9 for givens, 0 or '_' for empty cells
+	
+	Returns: 1 if a complete puzzle was read, 0 if EOF encountered
 */
-void read_input(sudoku * s, enum input_type intype)
+int read_input(sudoku * s, enum input_type intype)
 {
 	int i,j;
+	int chars_read = 0;
 	for(i = 0; i < N; i++)
 	{
 		for(j = 0; j < N; j++)
 		{
 			char c = getchar();
 			if (c == EOF)
-				return;
+				return 0;  // EOF encountered
+			chars_read++;
 			if (c >= '1' && c <= '9' )
 				insert_number_at(s, i, j, c - '1');
 		}
@@ -264,6 +267,7 @@ void read_input(sudoku * s, enum input_type intype)
 	}
 	if (intype == LINEAR_INPUT)
 		getchar(); // discards the \n only at the end
+	return 1;  // Successfully read complete puzzle
 }
 
 /*
@@ -340,11 +344,8 @@ int main (int argc, char const *argv[])
 		{
 			new_sudoku(&s);
 		
-			read_input(&s, intype);
-			
-			// Check if we read a complete puzzle
-			if (s.ninserted == 0)
-				break;
+			if (!read_input(&s, intype))
+				break;  // EOF or incomplete input
 			
 			solve(&s);
 	
