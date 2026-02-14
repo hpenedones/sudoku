@@ -35,8 +35,7 @@ Requirements
 - Make (optional, but recommended)
 
 **For full analysis:**
-- Python 3 with matplotlib (install with `pip install -r analysis/requirements.txt`)
-- ImageMagick convert tool
+- Python 3 with matplotlib and Pillow (install with `pip install -r analysis/requirements.txt`)
 - Unix/Linux shell with standard utilities (wget, awk, sort, etc.)
 
 Compilation
@@ -177,9 +176,13 @@ And now we are ready for some awesomeness!
 Rendering Sudoku puzzles
 ------
 
-We use ImageMagick convert tool to do the full rendering in one line:
+We use Python with PIL/Pillow to render the Sudoku puzzles:
 
-> i=1; cat top10.txt | while read line;  do echo $line | fold -w 9 | tr 0 " " | head -c 89 | convert  -pointsize 100 -font Courier -size 531x721 label:@- puzzle.png ; convert puzzle.png -border 10x10 -splice 0x10 -resize 328x328\! puzzle.png; convert blank_grid.gif puzzle.png -average hardest_sudoku_$i.png; i=`expr $i + 1`; done
+> ./render.sh
+
+Or manually for a single puzzle:
+
+> python3 render_sudoku.py "200500080001020000000000000070008000003000020000070600600200001040000700000300000" output.png blank_grid.gif
 
 Done!
 
