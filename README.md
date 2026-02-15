@@ -169,8 +169,8 @@ The solver accepts multiple input formats for flexibility:
 2. **Multi-line grid format**: 9 lines with 9 characters each
    ```python
    """53__7____
-   6__195___
-   ..."""
+6__195___
+..."""
    ```
 
 3. **List format**: 9x9 list of lists
