@@ -90,11 +90,13 @@ class SudokuSolver:
         
         # Search locations
         search_paths = [
-            # Current directory
+            # Package directory (where this file is)
             os.path.dirname(os.path.abspath(__file__)),
+            # Parent directory (repository root for development)
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             # Current working directory
             os.getcwd(),
-            # Package directory (for installed packages)
+            # Package lib subdirectory
             os.path.join(os.path.dirname(__file__), 'lib'),
         ]
         

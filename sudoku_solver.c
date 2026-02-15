@@ -43,15 +43,6 @@
 
 // Data Types
 
-/* Removed - now in sudoku.h
-typedef struct {
-	int constraints[N][N][N];
-	int inserted[N][N];
-	int ninserted;
-	int nbacktracks;
-} sudoku;
-*/
-
 enum print_mode { HYPOTHESIS_COUNT, VALUE, ALL_HYPOTHESIS };
 enum input_type { LINEAR_INPUT=1, GRID_INPUT};
 

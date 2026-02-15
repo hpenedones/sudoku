@@ -1,0 +1,6 @@
+include *.so
+include *.dylib
+include *.dll
+include sudoku.h
+include Makefile
+include sudoku_solver.c

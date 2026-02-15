@@ -26,10 +26,10 @@ void new_sudoku(sudoku *s);
    Solve a sudoku puzzle from a string input
    
    Parameters:
-     puzzle_str: Input string (81 characters, '0' or '_' for empty cells, '1'-'9' for given numbers)
+     puzzle_str: Input string (81 characters, '0', '_', or '.' for empty cells, '1'-'9' for given numbers)
      solution_str: Output buffer for solution (should be at least 82 chars for null terminator)
    
-   Returns: 1 if solved successfully, 0 if no solution exists
+   Returns: 1 if solved successfully, 0 if no solution exists, -1 if input is invalid
 */
 int solve_sudoku_from_string(const char *puzzle_str, char *solution_str);
 

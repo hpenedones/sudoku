@@ -23,7 +23,7 @@ pip install -e .
 
 # Use in Python
 python3
->>> from sudoku_wrapper import SudokuSolver
+>>> from sudoku_solver import SudokuSolver
 >>> solver = SudokuSolver()
 >>> puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
 >>> solution = solver.solve(puzzle)
@@ -167,7 +167,7 @@ pip install .
 ### Basic Usage
 
 ```python
-from sudoku_wrapper import SudokuSolver, solve_sudoku
+from sudoku_solver import SudokuSolver, solve_sudoku
 
 # Method 1: Using the convenience function
 puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"

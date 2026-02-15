@@ -63,7 +63,7 @@ setup(
     long_description=read_long_description(),
     long_description_content_type='text/markdown',
     url='https://github.com/hpenedones/sudoku',
-    py_modules=['sudoku_wrapper', '__init__'],
+    packages=['sudoku_solver'],
     python_requires='>=3.6',
     classifiers=[
         'Development Status :: 4 - Beta',
