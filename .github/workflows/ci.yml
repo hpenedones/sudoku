@@ -15,14 +15,34 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y gcc make
     
     - name: Build
       run: make
     
-    - name: Run tests
+    - name: Run C tests
       run: make test
     
     - name: Test compilation warnings
       run: gcc -Wall -Wextra -Werror sudoku_solver.c -o solver_strict
+    
+    - name: Build shared library
+      run: make lib
+    
+    - name: Install Python package
+      run: pip install -e .
+    
+    - name: Run Python tests (new API)
+      run: python3 tests/test_sudoku.py
+    
+    - name: Run Python tests (legacy API)
+      run: python3 test_sudoku_wrapper.py
+    
+    - name: Test Python examples
+      run: python3 examples/python_usage_new.py

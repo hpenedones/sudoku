@@ -21,12 +21,11 @@ make
 # Install
 pip install -e .
 
-# Use in Python
+# Use in Python (simple stateless API)
 python3
->>> from sudoku_solver import SudokuSolver
->>> solver = SudokuSolver()
+>>> import sudoku
 >>> puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
->>> solution = solver.solve(puzzle)
+>>> solution = sudoku.solve(puzzle)
 >>> print(solution)
 534678912672195348198342567859761423426853791713924856961537284287419635345286179
 ```
@@ -96,7 +95,111 @@ This will run all tests including:
 
 Run the Python test suite:
 ```bash
+python3 tests/test_sudoku.py
+```
+
+Or run the older class-based API tests:
+```bash
 python3 test_sudoku_wrapper.py
+```
+
+## Python Usage
+
+### Simple Stateless API (Recommended)
+
+The simplest way to use the sudoku solver in Python:
+
+```python
+import sudoku
+
+# Linear format (81 characters)
+puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
+solution = sudoku.solve(puzzle)
+print(solution)
+# Output: 534678912672195348198342567859761423426853791713924856961537284287419635345286179
+
+# Grid format (multi-line string)
+puzzle_grid = """53__7____
+6__195___
+_98____6_
+8___6___3
+4__8_3__1
+7___2___6
+_6____28_
+___419__5
+____8__79"""
+solution = sudoku.solve(puzzle_grid)
+
+# Grid format (9x9 list)
+puzzle_list = [
+    ['5', '3', '0', '0', '7', '0', '0', '0', '0'],
+    ['6', '0', '0', '1', '9', '5', '0', '0', '0'],
+    # ... 7 more rows
+]
+solution = sudoku.solve(puzzle_list)
+```
+
+The `solve()` function:
+- Accepts linear format (81-char string), multi-line grid format, or 9x9 list
+- Returns solution as 81-character string
+- Returns `None` if no solution exists
+- Raises `ValueError` for invalid input
+- Is completely stateless - no object creation needed
+
+### Class-based API (Alternative)
+
+For compatibility, the class-based API is also available:
+
+```python
+from sudoku_solver import SudokuSolver
+
+solver = SudokuSolver()
+solution = solver.solve(puzzle, return_format='string')
+```
+
+### Input Formats
+
+The solver accepts multiple input formats for flexibility:
+
+1. **Linear format**: 81-character string where empty cells are `0`, `_`, or `.`
+   ```python
+   "530070000600195000..."  # 81 characters
+   ```
+
+2. **Multi-line grid format**: 9 lines with 9 characters each
+   ```python
+   """53__7____
+6__195___
+..."""
+   ```
+
+3. **List format**: 9x9 list of lists
+   ```python
+   [['5','3','0',...], ['6','0','0',...], ...]
+   ```
+
+### Error Handling
+
+```python
+import sudoku
+
+try:
+    solution = sudoku.solve(puzzle)
+    if solution:
+        print(f"Solved: {solution}")
+    else:
+        print("No solution exists")
+except ValueError as e:
+    print(f"Invalid puzzle: {e}")
+```
+
+### Examples
+
+See `examples/python_usage_new.py` for complete working examples.
+
+Run the examples:
+```bash
+python3 examples/python_usage_new.py
 ```
 
 This will run comprehensive tests for the Python wrapper including:
