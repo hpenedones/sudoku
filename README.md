@@ -4,11 +4,31 @@
 
 A fast and efficient sudoku solver using constraint propagation and backtracking with depth-first search.
 
+Available as both a C command-line tool and a Python library.
+
 ## Quick Start
+
+### Command Line (C)
 
 ```bash
 make
 ./solver 1 < examples/example_linear.txt
+```
+
+### Python
+
+```bash
+# Install
+pip install -e .
+
+# Use in Python
+python3
+>>> from sudoku_wrapper import SudokuSolver
+>>> solver = SudokuSolver()
+>>> puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
+>>> solution = solver.solve(puzzle)
+>>> print(solution)
+534678912672195348198342567859761423426853791713924856961537284287419635345286179
 ```
 
 ## Overview
@@ -22,6 +42,8 @@ The goal was to use the solver to identify the hardest puzzles. The measure of d
 
 - **Two input formats**: Grid (9x9) and Linear (81 characters)
 - **Efficient algorithm**: Constraint propagation with backtracking
+- **Python wrapper**: Easy-to-use Python interface via ctypes
+- **Cross-platform**: Works on Linux, macOS, and Windows
 - **Difficulty analysis**: Tracks the number of backtracks per puzzle
 - **Comprehensive examples**: Sample puzzles included in the `examples/` directory
 
@@ -30,9 +52,13 @@ At the bottom of this page are the hardest sudoku puzzles found. Here is how you
 Requirements
 ------
 
-**Basic usage:**
+**Basic C usage:**
 - A C compiler (e.g., gcc)
 - Make (optional, but recommended)
+
+**Python usage:**
+- Python 3.6 or later
+- A C compiler (to build the shared library)
 
 **For full analysis:**
 - Python 3 with matplotlib and Pillow (install with `pip install -r analysis/requirements.txt`)
@@ -53,7 +79,9 @@ gcc sudoku_solver.c -o solver
 
 ## Testing
 
-Run the test suite:
+### C Tests
+
+Run the C test suite:
 ```bash
 make test
 ```
@@ -64,6 +92,19 @@ This will run all tests including:
 - Hard puzzle solving
 - Error handling
 
+### Python Tests
+
+Run the Python test suite:
+```bash
+python3 test_sudoku_wrapper.py
+```
+
+This will run comprehensive tests for the Python wrapper including:
+- Linear and grid format inputs
+- Various empty cell markers (0, _, .)
+- Error handling and validation
+- Solution correctness
+
 ## Performance
 
 Run a performance benchmark:
@@ -73,9 +114,7 @@ Run a performance benchmark:
 
 The solver is very fast for typical puzzles (< 1ms) but can take several seconds for extremely difficult puzzles that require extensive backtracking.
 
-Usage
-------
-
+## C Command-Line Usage
 
 The input is assumed to come from the standard input, and the program will print to the standard output.
 There is one command line argument, which defines the format of the input: 
@@ -109,6 +148,111 @@ Example with linear format:
 ```bash
 ./solver 1 < examples/example_linear.txt
 ```
+
+## Python Usage
+
+### Installation
+
+Install the package in development mode:
+```bash
+pip install -e .
+```
+
+Or install directly:
+```bash
+make lib  # Build the shared library
+pip install .
+```
+
+### Basic Usage
+
+```python
+from sudoku_wrapper import SudokuSolver, solve_sudoku
+
+# Method 1: Using the convenience function
+puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
+solution = solve_sudoku(puzzle)
+print(solution)
+# Output: 534678912672195348198342567859761423426853791713924856961537284287419635345286179
+
+# Method 2: Using the SudokuSolver class
+solver = SudokuSolver()
+solution = solver.solve(puzzle)
+```
+
+### Input Formats
+
+The Python wrapper supports multiple input formats:
+
+**1. Linear format (81-character string):**
+```python
+puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
+solution = solver.solve(puzzle)
+```
+
+Empty cells can be represented with `0`, `_`, or `.`:
+```python
+puzzle = "53__7____6__195____98____6_8___6___34__8_3__17___2___6_6____28____419__5____8__79"
+solution = solver.solve(puzzle)
+```
+
+**2. Grid format (9x9 list of lists):**
+```python
+puzzle = [
+    ['5', '3', '0', '0', '7', '0', '0', '0', '0'],
+    ['6', '0', '0', '1', '9', '5', '0', '0', '0'],
+    ['0', '9', '8', '0', '0', '0', '0', '6', '0'],
+    ['8', '0', '0', '0', '6', '0', '0', '0', '3'],
+    ['4', '0', '0', '8', '0', '3', '0', '0', '1'],
+    ['7', '0', '0', '0', '2', '0', '0', '0', '6'],
+    ['0', '6', '0', '0', '0', '0', '2', '8', '0'],
+    ['0', '0', '0', '4', '1', '9', '0', '0', '5'],
+    ['0', '0', '0', '0', '8', '0', '0', '7', '9']
+]
+
+# Return as string
+solution = solver.solve(puzzle, return_format='string')
+
+# Or return as grid
+solution_grid = solver.solve(puzzle, return_format='grid')
+for row in solution_grid:
+    print(' '.join(row))
+```
+
+### Error Handling
+
+The wrapper provides helpful error messages:
+
+```python
+try:
+    # Invalid length
+    solver.solve("12345")
+except ValueError as e:
+    print(f"Error: {e}")
+    # Error: Puzzle must be 81 characters long, got 5
+
+try:
+    # Invalid puzzle with duplicates
+    invalid = "110070000600195000098000060800060003400803001700020006060000280000419005000080079"
+    solver.solve(invalid)
+except ValueError as e:
+    print(f"Error: {e}")
+    # Error: Invalid puzzle format
+```
+
+### Examples
+
+See `examples/python_usage.py` for comprehensive examples:
+```bash
+python3 examples/python_usage.py
+```
+
+This demonstrates:
+- Linear and grid format inputs
+- Different empty cell markers
+- Return format options
+- Error handling
+- Solving hard puzzles
 
 
 Finding hard Sudoku puzzles
