@@ -199,7 +199,8 @@ class SudokuSolver:
                 raise ValueError(f"Row {i} must have 9 columns, got {len(row)}")
             for cell in row:
                 # Convert empty cell markers to '0'
-                if cell in ('_', '.', ' ', ''):
+                # Supports: '_', '.', ' ', '' (empty string), and '0'
+                if cell in ('_', '.', ' ', '', '0'):
                     result.append('0')
                 else:
                     result.append(cell)

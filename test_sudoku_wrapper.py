@@ -221,7 +221,7 @@ class TestSudokuSolverInstantiation(unittest.TestCase):
         # We're mainly testing that the error message is helpful
         try:
             # Try with an invalid path
-            solver = SudokuSolver(lib_path='/nonexistent/path/libsudoku.so')
+            _ = SudokuSolver(lib_path='/nonexistent/path/libsudoku.so')
             # If this succeeds, the library actually exists there (unlikely)
         except OSError as e:
             # Verify error message is helpful
