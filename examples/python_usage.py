@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Example usage of the Python sudoku solver wrapper.
+Example usage of the Python sudoku solver.
 
-This script demonstrates various ways to use the sudoku solver
+This script demonstrates various ways to use the sudoku.solve() function
 from Python code.
 """
 
@@ -12,7 +12,7 @@ import os
 # Add parent directory to path for imports (if not installed)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sudoku_solver import SudokuSolver, solve_sudoku
+import sudoku
 
 
 def example_linear_format():
@@ -26,8 +26,8 @@ def example_linear_format():
     
     print(f"\nPuzzle:\n{puzzle}")
     
-    # Solve using the convenience function
-    solution = solve_sudoku(puzzle)
+    # Solve using the function
+    solution = sudoku.solve(puzzle)
     
     if solution:
         print(f"\nSolution:\n{solution}")
@@ -45,13 +45,50 @@ def example_linear_format():
         print("No solution found!")
 
 
-def example_grid_format():
-    """Example using grid format (9x9 list of lists)."""
+def example_grid_format_string():
+    """Example using grid format (multi-line string)."""
     print("\n" + "=" * 60)
-    print("Example 2: Grid Format (9x9 list)")
+    print("Example 2: Grid Format (multi-line string)")
     print("=" * 60)
     
-    # Same puzzle as above, but in grid format
+    # Same puzzle in grid format with underscores
+    puzzle_grid = """53__7____
+6__195___
+_98____6_
+8___6___3
+4__8_3__1
+7___2___6
+_6____28_
+___419__5
+____8__79"""
+    
+    print(f"\nPuzzle:\n{puzzle_grid}")
+    
+    # Solve
+    solution = sudoku.solve(puzzle_grid)
+    
+    if solution:
+        print(f"\nSolution (linear format):\n{solution}")
+        
+        # Display as grid
+        print("\nSolution (grid format):")
+        for i in range(9):
+            row = solution[i*9:(i+1)*9]
+            formatted = f"{row[0:3]} | {row[3:6]} | {row[6:9]}"
+            print(formatted)
+            if i in (2, 5):
+                print("-----+-------+------")
+    else:
+        print("No solution found!")
+
+
+def example_grid_format_list():
+    """Example using grid format (9x9 list of lists)."""
+    print("\n" + "=" * 60)
+    print("Example 3: Grid Format (9x9 list)")
+    print("=" * 60)
+    
+    # Same puzzle as above, but in list format
     puzzle = [
         ['5', '3', '0', '0', '7', '0', '0', '0', '0'],
         ['6', '0', '0', '1', '9', '5', '0', '0', '0'],
@@ -69,17 +106,20 @@ def example_grid_format():
         formatted = f"{' '.join(row[0:3])} | {' '.join(row[3:6])} | {' '.join(row[6:9])}"
         print(formatted)
     
-    # Solve and return as grid
-    solver = SudokuSolver()
-    solution = solver.solve(puzzle, return_format='grid')
+    # Solve
+    solution = sudoku.solve(puzzle)
     
     if solution:
-        print("\nSolution:")
-        for i, row in enumerate(solution):
-            formatted = f"{' '.join(row[0:3])} | {' '.join(row[3:6])} | {' '.join(row[6:9])}"
+        print(f"\nSolution (linear format):\n{solution}")
+        
+        # Display as grid
+        print("\nSolution (grid format):")
+        for i in range(9):
+            row = solution[i*9:(i+1)*9]
+            formatted = f"{row[0:3]} | {row[3:6]} | {row[6:9]}"
             print(formatted)
             if i in (2, 5):
-                print("------+-------+------")
+                print("-----+-------+------")
     else:
         print("No solution found!")
 
@@ -87,7 +127,7 @@ def example_grid_format():
 def example_with_underscores():
     """Example using underscores for empty cells."""
     print("\n" + "=" * 60)
-    print("Example 3: Using Underscores for Empty Cells")
+    print("Example 4: Using Underscores for Empty Cells")
     print("=" * 60)
     
     # You can use underscores, dots, or zeros for empty cells
@@ -95,7 +135,7 @@ def example_with_underscores():
     
     print(f"\nPuzzle:\n{puzzle}")
     
-    solution = solve_sudoku(puzzle)
+    solution = sudoku.solve(puzzle)
     
     if solution:
         print(f"\nSolution:\n{solution}")
@@ -106,7 +146,7 @@ def example_with_underscores():
 def example_hard_puzzle():
     """Example with a harder puzzle."""
     print("\n" + "=" * 60)
-    print("Example 4: Harder Puzzle")
+    print("Example 5: Harder Puzzle")
     print("=" * 60)
     
     # One of the hardest puzzles (from the repository analysis)
@@ -122,7 +162,7 @@ def example_hard_puzzle():
             print()
     
     print("\nSolving (this may take a moment for hard puzzles)...")
-    solution = solve_sudoku(puzzle)
+    solution = sudoku.solve(puzzle)
     
     if solution:
         print(f"\nSolution:\n{solution}")
@@ -137,56 +177,37 @@ def example_hard_puzzle():
         print("No solution found!")
 
 
-def example_no_solution():
-    """Example with an unsolvable puzzle."""
-    print("\n" + "=" * 60)
-    print("Example 5: Unsolvable Puzzle")
-    print("=" * 60)
-    
-    # This puzzle has two 1's in the first row - invalid!
-    puzzle = "110070000600195000098000060800060003400803001700020006060000280000419005000080079"
-    
-    print(f"\nPuzzle (invalid - two 1's in first row):\n{puzzle}")
-    
-    try:
-        solution = solve_sudoku(puzzle)
-        
-        if solution:
-            print(f"\nSolution:\n{solution}")
-        else:
-            print("\nNo solution found! (as expected for an invalid puzzle)")
-    except ValueError as e:
-        print(f"\nError: {e}")
-
-
 def example_error_handling():
     """Example showing error handling."""
     print("\n" + "=" * 60)
     print("Example 6: Error Handling")
     print("=" * 60)
     
-    solver = SudokuSolver()
-    
     # Test with invalid length
     print("\nTest 1: Puzzle too short")
     try:
-        solver.solve("12345")
+        sudoku.solve("12345")
     except ValueError as e:
         print(f"Caught expected error: {e}")
     
     # Test with invalid characters
     print("\nTest 2: Invalid characters")
     try:
-        solver.solve("A" * 81)
+        sudoku.solve("A" * 81)
     except ValueError as e:
         print(f"Caught expected error: {e}")
     
-    # Test with wrong grid dimensions
-    print("\nTest 3: Invalid grid dimensions")
+    # Test with invalid puzzle (constraint violation)
+    print("\nTest 3: Invalid puzzle (two 1's in first row)")
     try:
-        solver.solve([['1', '2', '3']])  # Wrong size
+        invalid_puzzle = "110070000600195000098000060800060003400803001700020006060000280000419005000080079"
+        result = sudoku.solve(invalid_puzzle)
+        if result is None:
+            print("No solution found (as expected for invalid puzzle)")
+        else:
+            print(f"Unexpectedly found a solution: {result}")
     except ValueError as e:
-        print(f"Caught expected error: {e}")
+        print(f"Caught error: {e}")
 
 
 def main():
@@ -196,10 +217,10 @@ def main():
     print("=" * 60)
     
     example_linear_format()
-    example_grid_format()
+    example_grid_format_string()
+    example_grid_format_list()
     example_with_underscores()
     example_hard_puzzle()
-    example_no_solution()
     example_error_handling()
     
     print("\n" + "=" * 60)

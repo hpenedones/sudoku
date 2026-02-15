@@ -98,16 +98,9 @@ Run the Python test suite:
 python3 tests/test_sudoku.py
 ```
 
-Or run the older class-based API tests:
-```bash
-python3 test_sudoku_wrapper.py
-```
-
 ## Python Usage
 
-### Simple Stateless API (Recommended)
-
-The simplest way to use the sudoku solver in Python:
+The sudoku solver provides a simple, stateless function-based API:
 
 ```python
 import sudoku
@@ -145,17 +138,6 @@ The `solve()` function:
 - Returns `None` if no solution exists
 - Raises `ValueError` for invalid input
 - Is completely stateless - no object creation needed
-
-### Class-based API (Alternative)
-
-For compatibility, the class-based API is also available:
-
-```python
-from sudoku_solver import SudokuSolver
-
-solver = SudokuSolver()
-solution = solver.solve(puzzle, return_format='string')
-```
 
 ### Input Formats
 
@@ -195,14 +177,14 @@ except ValueError as e:
 
 ### Examples
 
-See `examples/python_usage_new.py` for complete working examples.
+See `examples/python_usage.py` for complete working examples.
 
 Run the examples:
 ```bash
-python3 examples/python_usage_new.py
+python3 examples/python_usage.py
 ```
 
-This will run comprehensive tests for the Python wrapper including:
+This will run comprehensive examples for the Python wrapper including:
 - Linear and grid format inputs
 - Various empty cell markers (0, _, .)
 - Error handling and validation
