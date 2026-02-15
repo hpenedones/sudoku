@@ -3,6 +3,18 @@ solver
 *.o
 *.out
 *.exe
+*.so
+*.dylib
+*.dll
+
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
 
 # Temporary files
 *.tmp
