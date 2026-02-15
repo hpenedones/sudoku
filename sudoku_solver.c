@@ -34,18 +34,23 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "sudoku.h"
 
-#define SQRT_N 3
-#define N (SQRT_N * SQRT_N) 
+#ifndef SUDOKU_LIB_ONLY
+#define SUDOKU_LIB_ONLY 0
+#endif 
 
 // Data Types
 
+/* Removed - now in sudoku.h
 typedef struct {
 	int constraints[N][N][N];
 	int inserted[N][N];
 	int ninserted;
 	int nbacktracks;
 } sudoku;
+*/
 
 enum print_mode { HYPOTHESIS_COUNT, VALUE, ALL_HYPOTHESIS };
 enum input_type { LINEAR_INPUT=1, GRID_INPUT};
@@ -313,6 +318,68 @@ int solve(sudoku * s)
 	
 }
 
+/* Public API Functions */
+
+void get_solution_string(sudoku *s, char *output)
+{
+	int i, j;
+	int idx = 0;
+	
+	int possibilities[N];
+	int *possibilities_ptr = possibilities;
+	int poss_count;
+	
+	for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++) {
+			get_possibilities_at(s, i, j, &possibilities_ptr, &poss_count);
+			if (poss_count == 1) {
+				output[idx++] = possibilities[0] + '1';
+			} else {
+				output[idx++] = '0';  /* Unsolved cell */
+			}
+		}
+	}
+	output[idx] = '\0';
+}
+
+int solve_sudoku_from_string(const char *puzzle_str, char *solution_str)
+{
+	sudoku s;
+	new_sudoku(&s);
+	
+	/* Validate input length */
+	if (strlen(puzzle_str) != N * N) {
+		return -1;  /* Invalid input length */
+	}
+	
+	/* Parse input string */
+	int i, j;
+	for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++) {
+			int idx = i * N + j;
+			char c = puzzle_str[idx];
+			
+			if (c >= '1' && c <= '9') {
+				insert_number_at(&s, i, j, c - '1');
+			} else if (c != '0' && c != '_' && c != '.') {
+				return -1;  /* Invalid character */
+			}
+		}
+	}
+	
+	/* Solve the puzzle */
+	int result = solve(&s);
+	
+	/* Get solution string */
+	if (result) {
+		get_solution_string(&s, solution_str);
+	}
+	
+	return result;
+}
+
+
+#if !SUDOKU_LIB_ONLY
 int main (int argc, char const *argv[])
 {
 	sudoku s;
@@ -353,3 +420,4 @@ int main (int argc, char const *argv[])
 		
 	return 0;
 }
+#endif /* !SUDOKU_LIB_ONLY */
