@@ -360,7 +360,12 @@ int solve_sudoku_from_string(const char *puzzle_str, char *solution_str)
 			char c = puzzle_str[idx];
 			
 			if (c >= '1' && c <= '9') {
-				insert_number_at(&s, i, j, c - '1');
+				int number = c - '1';
+				/* Check if this number can be placed at this position */
+				if (s.constraints[i][j][number] != 0) {
+					return -1;  /* Constraint violation - invalid puzzle */
+				}
+				insert_number_at(&s, i, j, number);
 			} else if (c != '0' && c != '_' && c != '.') {
 				return -1;  /* Invalid character */
 			}
