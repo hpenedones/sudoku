@@ -98,16 +98,9 @@ Run the Python test suite:
 python3 tests/test_sudoku.py
 ```
 
-Or run the older class-based API tests:
-```bash
-python3 test_sudoku_wrapper.py
-```
-
 ## Python Usage
 
-### Simple Stateless API (Recommended)
-
-The simplest way to use the sudoku solver in Python:
+The sudoku solver provides a simple, stateless function-based API:
 
 ```python
 import sudoku
@@ -145,17 +138,6 @@ The `solve()` function:
 - Returns `None` if no solution exists
 - Raises `ValueError` for invalid input
 - Is completely stateless - no object creation needed
-
-### Class-based API (Alternative)
-
-For compatibility, the class-based API is also available:
-
-```python
-from sudoku_solver import SudokuSolver
-
-solver = SudokuSolver()
-solution = solver.solve(puzzle, return_format='string')
-```
 
 ### Input Formats
 
@@ -195,14 +177,14 @@ except ValueError as e:
 
 ### Examples
 
-See `examples/python_usage_new.py` for complete working examples.
+See `examples/python_usage.py` for complete working examples.
 
 Run the examples:
 ```bash
-python3 examples/python_usage_new.py
+python3 examples/python_usage.py
 ```
 
-This will run comprehensive tests for the Python wrapper including:
+This will run comprehensive examples for the Python wrapper including:
 - Linear and grid format inputs
 - Various empty cell markers (0, _, .)
 - Error handling and validation
@@ -267,98 +249,7 @@ make lib  # Build the shared library
 pip install .
 ```
 
-### Basic Usage
-
-```python
-from sudoku_solver import SudokuSolver, solve_sudoku
-
-# Method 1: Using the convenience function
-puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
-solution = solve_sudoku(puzzle)
-print(solution)
-# Output: 534678912672195348198342567859761423426853791713924856961537284287419635345286179
-
-# Method 2: Using the SudokuSolver class
-solver = SudokuSolver()
-solution = solver.solve(puzzle)
-```
-
-### Input Formats
-
-The Python wrapper supports multiple input formats:
-
-**1. Linear format (81-character string):**
-```python
-puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
-solution = solver.solve(puzzle)
-```
-
-Empty cells can be represented with `0`, `_`, or `.`:
-```python
-puzzle = "53__7____6__195____98____6_8___6___34__8_3__17___2___6_6____28____419__5____8__79"
-solution = solver.solve(puzzle)
-```
-
-**2. Grid format (9x9 list of lists):**
-```python
-puzzle = [
-    ['5', '3', '0', '0', '7', '0', '0', '0', '0'],
-    ['6', '0', '0', '1', '9', '5', '0', '0', '0'],
-    ['0', '9', '8', '0', '0', '0', '0', '6', '0'],
-    ['8', '0', '0', '0', '6', '0', '0', '0', '3'],
-    ['4', '0', '0', '8', '0', '3', '0', '0', '1'],
-    ['7', '0', '0', '0', '2', '0', '0', '0', '6'],
-    ['0', '6', '0', '0', '0', '0', '2', '8', '0'],
-    ['0', '0', '0', '4', '1', '9', '0', '0', '5'],
-    ['0', '0', '0', '0', '8', '0', '0', '7', '9']
-]
-
-# Return as string
-solution = solver.solve(puzzle, return_format='string')
-
-# Or return as grid
-solution_grid = solver.solve(puzzle, return_format='grid')
-for row in solution_grid:
-    print(' '.join(row))
-```
-
-### Error Handling
-
-The wrapper provides helpful error messages:
-
-```python
-try:
-    # Invalid length
-    solver.solve("12345")
-except ValueError as e:
-    print(f"Error: {e}")
-    # Error: Puzzle must be 81 characters long, got 5
-
-try:
-    # Invalid puzzle with duplicates
-    invalid = "110070000600195000098000060800060003400803001700020006060000280000419005000080079"
-    solver.solve(invalid)
-except ValueError as e:
-    print(f"Error: {e}")
-    # Error: Invalid puzzle format
-```
-
-### Examples
-
-See `examples/python_usage.py` for comprehensive examples:
-```bash
-python3 examples/python_usage.py
-```
-
-This demonstrates:
-- Linear and grid format inputs
-- Different empty cell markers
-- Return format options
-- Error handling
-- Solving hard puzzles
-
-
-Finding hard Sudoku puzzles
+## Finding hard Sudoku puzzles
 ======
 
 Instead of outputting the puzzle solution, we can instead output the number of backtrackings that the algorithm had to perform to achieve that solution. This gives an estimate on how hard the puzzle is.
