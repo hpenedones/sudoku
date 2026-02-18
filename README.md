@@ -139,27 +139,6 @@ The `solve()` function:
 - Raises `ValueError` for invalid input
 - Is completely stateless - no object creation needed
 
-### Input Formats
-
-The solver accepts multiple input formats for flexibility:
-
-1. **Linear format**: 81-character string where empty cells are `0`, `_`, or `.`
-   ```python
-   "530070000600195000..."  # 81 characters
-   ```
-
-2. **Multi-line grid format**: 9 lines with 9 characters each
-   ```python
-   """53__7____
-6__195___
-..."""
-   ```
-
-3. **List format**: 9x9 list of lists
-   ```python
-   [['5','3','0',...], ['6','0','0',...], ...]
-   ```
-
 ### Error Handling
 
 ```python
@@ -365,9 +344,6 @@ We can now display the top 10 hardest sudoku puzzles (according to my solver):
 
 ![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/hardest_sudoku_10.png)
 
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Code of Conduct
 
