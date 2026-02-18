@@ -250,7 +250,6 @@ pip install .
 ```
 
 ## Finding hard Sudoku puzzles
-======
 
 Instead of outputting the puzzle solution, we can instead output the number of backtrackings that the algorithm had to perform to achieve that solution. This gives an estimate on how hard the puzzle is.
 I didn't put a command line option for this, but you can just (un)comment the appropriate lines in the main routine:
@@ -262,21 +261,31 @@ print(&s, 1);    // prints the solution
 
 I downloaded a file with about 50000 puzzles (with 17 given numbers, out of the 81):
 
-> wget http://school.maths.uwa.edu.au/~gordon/sudoku17 -O puzzles.txt
+```bash
+wget http://school.maths.uwa.edu.au/~gordon/sudoku17 -O puzzles.txt
+```
 
 Then I computed the number of backtracks per puzzle for all of them (which takes a few hours!):
 
-> ./solve 1 < puzzles.txt > nbacktracks.txt
+```bash
+./solve 1 < puzzles.txt > nbacktracks.txt
+```
 
 And generated a histogram with Python matplotlib. I have a script called make_histogram.sh containing this:
 
-> cat nbacktracks.txt | sort -n | awk -F" " '{print exp(int(log($1))) }' | uniq -c > histogram.txt
+```bash
+cat nbacktracks.txt | sort -n | awk -F" " '{print exp(int(log($1))) }' | uniq -c > histogram.txt
+```
 
-> python3 plot_histogram.py histogram.txt histogram.png
+```bash
+python3 plot_histogram.py histogram.txt histogram.png
+```
 
 You can then run: 
- 
-> ./make_histogram.sh
+
+ ```bash
+ ./make_histogram.sh
+```
 
 ![ScreenShot](https://raw.github.com/hpenedones/sudoku/master/analysis/histogram.png)
 
@@ -285,7 +294,9 @@ It's curious that with a logscale x-axis the distribution looks like a Gaussian.
 I decided to locate the hardest and share them here. Let me know if you also found them hard to solve!
 
 
-> paste nbacktracks.txt puzzles.txt | sort -nr | head -n 10
+```bash
+paste nbacktracks.txt puzzles.txt | sort -nr | head -n 10
+```
 
 ```
 1165175 200500080001020000000000000070008000003000020000070600600200001040000700000300000
@@ -303,11 +314,15 @@ Ok, so now we need to render this sudoku puzzles in a human-friendly fashion. So
 
 We store the top 10 sudoku in a file (drop the backtrack counts):
 
-> paste nbacktracks.txt puzzles.txt | sort -nr | head -n 10 | cut -f 2 > top10.txt
+```bash
+paste nbacktracks.txt puzzles.txt | sort -nr | head -n 10 | cut -f 2 > top10.txt
+```
 
 Download an empty sudoku board image from somewhere in the web (searched google images with "sudoku empty"):
 
-> wget http://www.scouk.net/entertainment/sudoku/blank_grid.gif
+```bash
+wget http://www.scouk.net/entertainment/sudoku/blank_grid.gif
+```
 
 And now we are ready for some awesomeness! 
 
@@ -316,11 +331,15 @@ Rendering Sudoku puzzles
 
 We use Python with PIL/Pillow to render the Sudoku puzzles:
 
-> ./render.sh
+```bash
+./render.sh
+```
 
 Or manually for a single puzzle:
 
-> python3 render_sudoku.py "200500080001020000000000000070008000003000020000070600600200001040000700000300000" output.png blank_grid.gif
+```bash
+python3 render_sudoku.py "200500080001020000000000000070008000003000020000070600600200001040000700000300000" output.png blank_grid.gif
+```
 
 Done!
 
